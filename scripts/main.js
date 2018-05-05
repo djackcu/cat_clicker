@@ -1,7 +1,7 @@
 // clear the screen for testing
 document.body.innerHTML = '';
 
-var cats = [{
+var model = [{
         id: 1,
         name: 'Iumi',
         src: 'images/cat1.jpg',
@@ -31,9 +31,47 @@ var cats = [{
     }
 ];
 
+var octopus ={
+	init(){
+		viewButtons.init();
+		viewCats.init();
+
+	},
+	getCurrentCat(id){
+		return model.find(cat=>cat.id==id);
+	},
+	countClick(id){
+		model[model.indexOf(this.getCurrentCat(id))].count++;
+	},
+	getAllName(){
+		return model.map((cat)=>({id:cat.id,name:cat.name}));
+	}
+};
+
+var viewButtons = {
+	init(){
+		this.buttons = document.getElementById('#buttons');
+		
+	},
+	render(){
+		octopus.getAllName().forEach(function(cats) {
+			
+		});
+	}
+};
+
+var viewCats = {
+	init(){
+		th
+	},
+	render(){
+
+	}
+};
+
 // Let's loop over the numbers in our array
-for (let cat of cats) {
-    let view = `<ul><li>Name: ${cat.name}</li>
+for (let cat of model) {
+    let showing = `<ul><li>Name: ${cat.name}</li>
         <li><img class="cat" src="${cat.src}"></li>
         <li>Click</li>
         <li id="${cat.id}">${cat.count}</li>
@@ -41,7 +79,7 @@ for (let cat of cats) {
 
     // We're creating a DOM element for the number
     var elem = document.createElement('div');
-    elem.innerHTML = view;
+    elem.innerHTML = showing;
 
     // ... and when we click, alert the value of `num`
     elem.addEventListener('click', (function(count,idCat) {
