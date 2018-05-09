@@ -1,20 +1,34 @@
 <!doctype html>
 <html lang="">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>catclicker</title>
-
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="stylesheet" href="styles/main.css">
+</head>
 
-    
-  </head>
-  <body>
- <div id="buttons"></div>
-  <div id="cats"></div>
+<body>
+    <div id="buttons"></div>
+    <div id="cats">
+        <ul>
+            <li id="catName"></li>
+            <li>Clicks</li>
+            <li id="catCount"></li>
+            <li><img id="catImg" src=""></li>
+        </ul>
+    </div>
+    <div id="adminBtn">Admin</div>
+    <div id="adminForm" class="hidden">
+        <input type="text" name="Name" id="adminCatName">
+        <input type="text" name="" id="adminCatUrl">
+        <input type="text" name="" id="adminCatClick">
+        <input type="button" value="Cancel" id="cancelBtn">
+        <input type="button" value="Change" id="changeBtn">
+    </div>
     <script src="scripts/main.js"></script>
+</body>
 
-  </body>
 </html>

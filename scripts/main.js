@@ -1,95 +1,136 @@
 // clear the screen for testing
-document.body.innerHTML = '';
 
-var model = [{
-        id: 1,
-        name: 'Iumi',
-        src: 'images/cat1.jpg',
-        count: 0
+
+var model = {
+    current: null,
+    cats: [{
+            id: 1,
+            name: 'Iumi',
+            src: 'images/cat1.jpg',
+            count: 0
+        },
+        {
+            id: 2,
+            name: 'Sasha',
+            src: 'images/cat2.jpg',
+            count: 0
+        }, {
+            id: 3,
+            name: 'Kiko',
+            src: 'images/cat3.jpg',
+            count: 0
+        },
+        {
+            id: 4,
+            name: 'Kikas',
+            src: 'images/cat4.jpg',
+            count: 0
+        }, {
+            id: 5,
+            name: 'Sombra',
+            src: 'images/cat5.jpg',
+            count: 0
+        }
+    ]
+};
+
+var octopus = {
+    init() {
+        this.setCurrent(1);
+        //adminCat.init();
+        viewButtons.init();
+        viewCats.init();
     },
-    {
-        id: 2,
-        name: 'Sasha',
-        src: 'images/cat2.jpg',
-        count: 0
-    }, {
-        id: 3,
-        name: 'Kiko',
-        src: 'images/cat3.jpg',
-        count: 0
+    setCurrent(id) {
+        model.current = id;
     },
-    {
-        id: 4,
-        name: 'Kikas',
-        src: 'images/cat4.jpg',
-        count: 0
-    }, {
-        id: 5,
-        name: 'Sombra',
-        src: 'images/cat5.jpg',
-        count: 0
+    getCurrentCat() {
+        return model.cats.find(cat => cat.id == model.current);
+    },
+    countClick() {
+        this.getCurrentCat().count++;
+        viewCats.render();
+    },
+    getAllName() {
+        return model.cats.map((cat) => ({ id: cat.id, name: cat.name }));
+    },
+    setCurrentCat(name, src, count) {
+        let currentCat = this.getCurrentCat();
+        currentCat.name = name;
+        currentCat.src = src;
+        currentCat.click = count;
+       /* viewCats.render();
+        adminCat.render();*/
     }
-];
 
-var octopus ={
-	init(){
-		viewButtons.init();
-		viewCats.init();
-
-	},
-	getCurrentCat(id){
-		return model.find(cat=>cat.id==id);
-	},
-	countClick(id){
-		model[model.indexOf(this.getCurrentCat(id))].count++;
-	},
-	getAllName(){
-		return model.map((cat)=>({id:cat.id,name:cat.name}));
-	}
 };
 
 var viewButtons = {
-	init(){
-		this.buttons = document.getElementById('#buttons');
-		
-	},
-	render(){
-		octopus.getAllName().forEach(function(cats) {
-			
-		});
-	}
+    init() {
+        this.buttons = document.getElementById('buttons');
+        this.adminBtn = document.getElementById('adminBtn');
+        this.adminForm = document.getElementById('adminForm');
+        this.adminBtn.addEventListener('click', function() {
+            viewButtons.adminForm.classList.toggle('hidden');
+        });
+        this.render();
+    },
+    render() {
+
+        octopus.getAllName().forEach(function(cat) {
+            let button = document.createElement('div');
+            button.id = cat.id;
+            button.textContent = cat.name;
+            button.addEventListener('click', (function(idCat) {
+                return function() {
+                    octopus.setCurrent(cat.id);
+                    viewCats.render();
+                    //adminCat.render();
+                };
+            })(cat.id));
+            this.buttons.appendChild(button);
+        });
+    }
 };
 
 var viewCats = {
-	init(){
-		th
-	},
-	render(){
+    init() {
+        this.catName = document.getElementById('catName');
+        this.catCount = document.getElementById('catCount');
+        this.catImg = document.getElementById('catImg');
+        this.catImg.addEventListener('click', (function(octopus) {
+            return function() {
+                octopus.countClick();
+            };
+        })(octopus));
+        this.render();
+    },
+    render() {
+        let cat = octopus.getCurrentCat();
+        this.catName.textContent = cat.name;
+        this.catCount.textContent = cat.count;
+        this.catImg.src = cat.src;
 
-	}
+    }
+};
+var adminCat = {
+    init() {
+        this.changeBtn = document.getElementById('changeBtn');
+        this.cancelBtn = document.getElementById('cancelBtn');
+        this.adminCatName = document.getElementById('adminCatName');
+        this.adminCatUrl = document.getElementById('adminCatUrl');
+        this.adminCatClick = document.getElementById('adminCatClick');
+        this.changeBtn.addEventListener('click', (function(catText, octopus) {
+            octopus.setCurrentCat(catText.adminCatName.value, catText.adminCatUrl.value, catText.adminCatClick.value);
+        })(adminCat, octopus));
+        this.render();
+    },
+    render() {
+    	let cat = octopus.getCurrentCat();
+        this.adminCatName.value = cat.name;
+        this.adminCatClick.value = cat.count;
+        this.adminCatUrl.value = cat.src;
+    }
 };
 
-// Let's loop over the numbers in our array
-for (let cat of model) {
-    let showing = `<ul><li>Name: ${cat.name}</li>
-        <li><img class="cat" src="${cat.src}"></li>
-        <li>Click</li>
-        <li id="${cat.id}">${cat.count}</li>
-      </ul>`;
-
-    // We're creating a DOM element for the number
-    var elem = document.createElement('div');
-    elem.innerHTML = showing;
-
-    // ... and when we click, alert the value of `num`
-    elem.addEventListener('click', (function(count,idCat) {
-        return function() {
-            count++;
-            let id = idCat.toString();
-            let countCat = document.getElementById(id);
-            countCat.textContent = count;
-        };
-    })(cat.count, cat.id));
-
-    document.body.appendChild(elem);
-};
+octopus.init();
