@@ -73,6 +73,15 @@ var viewButtons = {
         this.adminBtn.addEventListener('click', function() {
             viewButtons.adminForm.classList.toggle('hidden');
         });
+        this.changeBtn = document.getElementById('changeBtn');
+        this.cancelBtn = document.getElementById('cancelBtn');
+        this.adminCatName = document.getElementById('adminCatName');
+        this.adminCatUrl = document.getElementById('adminCatUrl');
+        this.adminCatClick = document.getElementById('adminCatClick');
+       
+        this.cancelBtn.addEventListener('click',function() {
+            viewButtons.adminForm.classList.toggle('hidden');
+        });
         this.render();
     },
     render() {
@@ -90,6 +99,14 @@ var viewButtons = {
             })(cat.id));
             this.buttons.appendChild(button);
         });
+
+        let cat = octopus.getCurrentCat();
+        this.adminCatName.value = cat.name;
+        this.adminCatClick.value = cat.count;
+        this.adminCatUrl.value = cat.src;
+        this.changeBtn.addEventListener('click', (function(catText, octopus) {
+            octopus.setCurrentCat(catText.adminCatName.value, catText.adminCatUrl.value, catText.adminCatClick.value);
+        })(this, octopus));
     }
 };
 
@@ -111,25 +128,6 @@ var viewCats = {
         this.catCount.textContent = cat.count;
         this.catImg.src = cat.src;
 
-    }
-};
-var adminCat = {
-    init() {
-        this.changeBtn = document.getElementById('changeBtn');
-        this.cancelBtn = document.getElementById('cancelBtn');
-        this.adminCatName = document.getElementById('adminCatName');
-        this.adminCatUrl = document.getElementById('adminCatUrl');
-        this.adminCatClick = document.getElementById('adminCatClick');
-        this.changeBtn.addEventListener('click', (function(catText, octopus) {
-            octopus.setCurrentCat(catText.adminCatName.value, catText.adminCatUrl.value, catText.adminCatClick.value);
-        })(adminCat, octopus));
-        this.render();
-    },
-    render() {
-    	let cat = octopus.getCurrentCat();
-        this.adminCatName.value = cat.name;
-        this.adminCatClick.value = cat.count;
-        this.adminCatUrl.value = cat.src;
     }
 };
 
