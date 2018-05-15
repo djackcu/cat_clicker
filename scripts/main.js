@@ -37,7 +37,6 @@ var model = {
 var octopus = {
     init() {
         this.setCurrent(1);
-        //adminCat.init();
         viewButtons.init();
         viewCats.init();
     },
@@ -58,9 +57,9 @@ var octopus = {
         let currentCat = this.getCurrentCat();
         currentCat.name = name;
         currentCat.src = src;
-        currentCat.click = count;
-       /* viewCats.render();
-        adminCat.render();*/
+        currentCat.count = count;
+        viewCats.render();
+        viewButtons.render();
     }
 
 };
@@ -73,19 +72,11 @@ var viewButtons = {
         this.adminBtn.addEventListener('click', function() {
             viewButtons.adminForm.classList.toggle('hidden');
         });
-        this.changeBtn = document.getElementById('changeBtn');
-        this.cancelBtn = document.getElementById('cancelBtn');
-        this.adminCatName = document.getElementById('adminCatName');
-        this.adminCatUrl = document.getElementById('adminCatUrl');
-        this.adminCatClick = document.getElementById('adminCatClick');
-       
-        this.cancelBtn.addEventListener('click',function() {
-            viewButtons.adminForm.classList.toggle('hidden');
-        });
+
         this.render();
     },
     render() {
-
+        this.buttons.innerHTML = '';
         octopus.getAllName().forEach(function(cat) {
             let button = document.createElement('div');
             button.id = cat.id;
@@ -94,19 +85,11 @@ var viewButtons = {
                 return function() {
                     octopus.setCurrent(cat.id);
                     viewCats.render();
-                    //adminCat.render();
                 };
             })(cat.id));
             this.buttons.appendChild(button);
-        });
-
-        let cat = octopus.getCurrentCat();
-        this.adminCatName.value = cat.name;
-        this.adminCatClick.value = cat.count;
-        this.adminCatUrl.value = cat.src;
-        this.changeBtn.addEventListener('click', (function(catText, octopus) {
-            octopus.setCurrentCat(catText.adminCatName.value, catText.adminCatUrl.value, catText.adminCatClick.value);
-        })(this, octopus));
+        });        
+        
     }
 };
 
@@ -120,6 +103,20 @@ var viewCats = {
                 octopus.countClick();
             };
         })(octopus));
+        //
+        this.changeBtn = document.getElementById('changeBtn');
+        this.cancelBtn = document.getElementById('cancelBtn');
+        this.adminCatName = document.getElementById('adminCatName');
+        this.adminCatUrl = document.getElementById('adminCatUrl');
+        this.adminCatClick = document.getElementById('adminCatClick');
+       
+        this.cancelBtn.addEventListener('click',function() {
+            viewButtons.adminForm.classList.toggle('hidden');
+        });
+        this.changeBtn.addEventListener('click', function() {
+            octopus.setCurrentCat(viewCats.adminCatName.value, viewCats.adminCatUrl.value, viewCats.adminCatClick.value);
+            viewCats.render();
+        });
         this.render();
     },
     render() {
@@ -127,6 +124,10 @@ var viewCats = {
         this.catName.textContent = cat.name;
         this.catCount.textContent = cat.count;
         this.catImg.src = cat.src;
+
+        this.adminCatName.value = cat.name;
+        this.adminCatClick.value = cat.count;
+        this.adminCatUrl.value = cat.src;
 
     }
 };
